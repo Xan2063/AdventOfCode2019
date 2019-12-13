@@ -61,7 +61,7 @@ class Day7 {
     fun Part2() {
         val input = File("input7.txt").readLines()[0].split(',')
         val ar = input.map { it.toInt() }.toTypedArray()
-        val permutations = permute(listOf(5,6,7,8,9).)
+        val permutations = permute(listOf(5,6,7,8,9))
 
         val result = permutations.map {
 
