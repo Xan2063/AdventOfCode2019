@@ -2,10 +2,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.Is
 import org.junit.jupiter.api.Test
 import java.io.File
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.atan
-import kotlin.math.atan2
+import kotlin.math.*
 
 
 class Day10 {
@@ -31,11 +28,11 @@ class Day10 {
             groupBy { distance ->reduceVector(distance) }}.maxBy { it.count() }!!
 
         val sortedByAngle = distances.toList().
-            sortedByDescending { (k,_)->sortbyAngle(k) }
-        val asteroidslist = sortedByAngle.drop(198).take(5).map{it.second.first()}
+            sortedBy{ (k,_)->sortbyAngle(k) }
+        val asteroidslist = sortedByAngle.map{it.second.first()}.drop(199).take(3)
         asteroidslist.forEach{asteroid->
-            println(asteroid)
             val aster= asteroid.first+20 to asteroid.second +18
+            println(aster)
             val result = aster.first*100 + aster.second
             println(result)
         }
@@ -44,11 +41,26 @@ class Day10 {
 
     }
 
-    private fun sortbyAngle(k: Pair<Int, Int>):Int {
-        var angle = vectorAngle(k.first, k.second)
-        angle -= 90
-        if (angle<=0) angle += 360
-        return angle
+    private fun sortbyAngle(k: Pair<Int, Int>):Double = if (k.first>=0) angleToYAxis(k) else 2.0*PI - angleToYAxis(k)
+
+    fun angleToYAxis(vector: Pair<Int, Int>)= acos(-vector.second/ vector.length())
+
+    fun Pair<Int,Int>.length() = sqrt(first.toDouble() * first + second * second)
+
+    @Test
+    fun angleTest(){
+        val tests = mapOf(//(0 to 1) to 0.0,
+        (1 to 1) to PI/4,
+            (1 to 0) to PI/2,
+            (1 to -1) to 3.0*PI/4,
+       (0 to -1) to PI,
+            (-1 to -1) to 2.0* PI,
+       (-1 to 0) to 3.0/2* PI,
+        (-1 to 1) to PI)
+        tests.forEach{
+            println("value ${it.key} to result${sortbyAngle(it.key)}")
+//            assertThat(sortbyAngle(it.key), Is.`is`(it.value))
+        }
     }
 
     fun vectorAngle(x: Int, y: Int): Int {
